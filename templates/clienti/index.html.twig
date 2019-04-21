@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+{% form_theme searchForm with [
+    'bootstrap_4_layout.html.twig',
+    'form/inlineSearchForm.html.twig',]
+%}
+
+{% block title %}Clienti{% endblock %}
+
+{% block body %}
+
+    {{ form(searchForm, {'action': path('clienti'), }) }}
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>Codice</th>
+            <th>Ragione Sociale</th>
+            <th>Indirizzo</th>
+            <th>Telefono</th>
+            <th>@</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for cli in clienti %}
+            <tr>
+                <td scope=row>{{ cli.id }}</td>
+                <td>{{ cli.codice }}</td>
+                <td>{{ cli.ragioneSociale }}</td>
+                <td>{{ cli.paese }} ({{ cli.provincia.sigla }})</td>
+                <td>{{ cli.telefono }}</td>
+                <td><a href="mailto:{{ cli.email }}">{{ cli.email}}</a></td>
+                <td>
+                    <a href="{{ path('clienti_edit', {id: cli.id}) }}" class="btn btn-primary btn-sm">
+                        <i class="fas fa-edit"></i></a>
+                    <a href="{{ path('clienti_delete', {id: cli.id}) }}" class="btn btn-danger btn-sm">
+                        <i class="fas fa-trash-alt"></i></a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {% if clienti.haveToPaginate is defined and clienti.haveToPaginate %}
+        <div class="navigation">
+            {{ pagerfanta(clienti, 'twitter_bootstrap4_translated', {routeName: 'clienti_index_paginated', routeParams: app.request.query.all}) }}
+        </div>
+    {% endif %}
+
+{% endblock %}

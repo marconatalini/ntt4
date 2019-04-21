@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% form_theme prospettiForm with [
+'bootstrap_4_layout.html.twig',
+'form/inlineSearchForm.html.twig',]
+%}
+
+{% block title %}Prospetti viaggi{% endblock %}
+
+{% block body %}
+
+    {{ form(prospettiForm, {'action': path('prospetti'), }) }}
+
+    <h1 class="page-header">Prospetto viaggi e destinazioni anno </h1>
+    {% set curmese = 0 %}
+    {% set index = 0 %}
+    {% set nomemese = ['gennaio','febbraio','marzo','aprile','maggio','giugno','luglio','agosto','settembre','ottobre','novembre','dicembre'] %}
+
+    {% for row in result %}
+        {% if row.mese != curmese %}
+            {% if curmese >0 %}
+                <tr>
+                    <th>Totale viaggi {{ index }}</th>
+                    {% set index = 0 %}
+                </tr>
+                </tbody>
+                </table>
+            {% endif %}
+            <h3>Mese di {{ nomemese[row.mese -1] |capitalize }} {{ anno }}</h3>
+            <table class="table table-striped">
+            <tbody>
+            <tr>
+                <th>Data DDT</th>
+                <th>Numero</th>
+                <th>Cliente</th>
+                <th>Provincia</th>
+            </tr>
+            <tr>
+                <td>{{ row.data_ddt|date('j/m/Y') }}</td>
+                <td scope="row"><a href="{{ path('ddts_edit', {id: row.id})  }}">{{ row.numero_ddt }}</a></td>
+                <td>{{ row.ragione_sociale }} </td>
+                <td>{{ row.sigla }}</td>
+            </tr>
+        {% else %}
+            <tr>
+                <td>{{ row.data_ddt|date('j/m/Y') }}</td>
+                <td scope="row"><a href="{{ path('ddts_edit', {id: row.id})  }}">{{ row.numero_ddt }}</a></td>
+                <td>{{ row.ragione_sociale }} </td>
+                <td>{{ row.sigla }}</td>
+            </tr>
+        {% endif %}
+        {% set index = index + 1 %}
+        {% set curmese = row.mese %}
+    {% endfor %}
+    <tr>
+        <th>Totale viaggi {{ index }}</th>
+        {% set index = 0 %}
+    </tr>
+    </tbody>
+    </table>
+{% endblock %}

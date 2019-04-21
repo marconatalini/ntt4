@@ -1,0 +1,58 @@
+<style type="text/css">
+    body {
+        font-family: sans-serif;
+        font-size: 9pt;
+    }
+
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    th, td{
+        border-bottom: 1px solid gray;
+        text-align: left;
+    }
+
+    tr:nth-child(even){
+        background-color: #e1f1ff;
+    }
+
+    th.prezzo, td.prezzo {
+        text-align: right;
+    }
+    
+</style>
+
+{% set totale = 0 %}
+<h2>Lista fatture {{ mese }} / {{ anno }}</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Numero</th>
+            <th style="width: 35%">Cliente</th>
+            <th>Pagamento</th>
+            <th class="prezzo">Importo</th>
+            <th class="prezzo">Totale</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for ft in fatture %}
+        <tr>
+            <td>{{ ft.numeroFattura }}</td>
+            <td>{{ ft.cliente.ragioneSociale }}</td>
+            <td>{{ ft.cliente.Pagamento.pagamento}}</td>
+            <td class="prezzo">{{ ft.totale|number_format(2, '.', ',') }}</td>
+            {% set totale = totale + ft.totale %}
+            <td class="prezzo">{{ (ft.totale*(1+ft.iva/100))|number_format(2,'.',',')}}</td>
+        </tr>
+    {% endfor %}
+        <tr style="border-top: solid 2px black">
+            <td></td>
+            <td></td>
+            <td><strong>TOTALE</strong></td>
+            <td class="prezzo"><strong>{{ totale }}</strong></td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>

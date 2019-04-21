@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ddts{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('css/ddt') }}
+
+{% endblock %}
+
+{% block body %}
+
+    {{ form_start(form) }}
+    {{ form_errors(form) }}
+
+    {{ form_row(form.automezzo) }}
+    <div class="row">
+        <div class="form-group col-sm-4">
+            {{ form_label(form.numeroDdt) }}
+            {{ form_widget(form.numeroDdt) }}
+        </div>
+        <div class="form-group col-sm-2">
+            {{ form_label(form.dataDdt) }}
+            {{ form_widget(form.dataDdt) }}
+        </div>
+        <div class="form-group col-sm-6">
+            {{ form_label(form.cliente) }}
+            {{ form_widget(form.cliente) }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-sm-8">
+            {{ form_label(form.descrizione) }}
+            {{ form_widget(form.descrizione) }}
+        </div>
+        <div class="form-group col-sm-2">
+            {{ form_label(form.provincia) }}
+            {{ form_widget(form.provincia) }}
+        </div>
+        <div class="form-group col-sm-2">
+            {{ form_label(form.peso) }}
+            {{ form_widget(form.peso) }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-sm-2">
+            {{ form_label(form.quantita) }}
+            {{ form_widget(form.quantita) }}
+        </div>
+        <div class="form-group col-sm-5">
+            {{ form_label(form.prezzoLire) }}
+            {{ form_widget(form.prezzoLire) }}
+        </div>
+        <div class="form-group col-sm-5">
+            {{ form_label(form.prezzo) }}
+            {{ form_widget(form.prezzo) }}
+        </div>
+    </div>
+    {{ form_end(form) }}
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('js/ddt') }}
+{% endblock %}

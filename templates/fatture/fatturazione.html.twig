@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+{% form_theme fatturaForm with [
+    'bootstrap_4_layout.html.twig',
+    'form/inlineSearchForm.html.twig',]
+%}
+
+{% block title %}Fatturazione{% endblock %}
+
+{% block body %}
+
+    {{ form(fatturaForm, {'action': path('fatture_add'), }) }}
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>Cliente</th>
+            <th>Totale</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for record in fatture %}
+            <tr>
+                <td>{{ record.id }}</td>
+                <td scope="row">{{ record.ragione_sociale }} </td>
+                <td>{{ record.totale }} </td>
+                <td>
+                    <a href="{{ path('fatturazione', {idcli: record.id, data_ft: data_fattura|date('Y-m-d')} ) }}" class="btn btn-success btn-sm"
+                       data-toggle="tooltip" title="Clicca per fatturare"><i class="fas fa-flag-checkered"></i></a>
+                    <a href="{{ path('ddts', {cliente: record.id, data_ft: data_fattura|date('Y-m-d')} ) }}" class="btn btn-default btn-sm"
+                       data-toggle="tooltip" title="Clicca per vedere i DDT compresi"><i class="fas fa-search"></i></a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('js/ftadd') }}
+{% endblock %}

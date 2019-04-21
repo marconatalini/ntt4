@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Report{% endblock %}
+
+{% block body %}
+
+    <div class="ft1" data-fatturato="{{ ft1|json_encode|e('html_attr') }}"></div>
+    <div class="ft2" data-fatturato="{{ ft2|json_encode|e('html_attr') }}"></div>
+    <div class="ft3" data-fatturato="{{ ft3|json_encode|e('html_attr') }}"></div>
+    <div class="ft4" data-fatturato="{{ ft4|json_encode|e('html_attr') }}"></div>
+    <div class="ft5" data-fatturato="{{ ft5|json_encode|e('html_attr') }}"></div>
+
+    <div class="label1" data-label="{{ label1 }}"></div>
+    <div class="label2" data-label="{{ label2 }}"></div>
+    <div class="label3" data-label="{{ label3 }}"></div>
+    <div class="label4" data-label="{{ label4 }}"></div>
+    <div class="label5" data-label="{{ label5 }}"></div>
+
+    <canvas id="myChart"></canvas>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent()}}
+    {{ encore_entry_script_tags('js/reportFatturato') }}
+{% endblock %}

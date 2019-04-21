@@ -1,0 +1,85 @@
+{% extends 'base.html.twig' %}
+{% form_theme searchForm with [
+    'bootstrap_4_layout.html.twig',
+    'form/inlineSearchForm.html.twig',]
+%}
+
+{% block title %}Fatture{% endblock %}
+
+{% block body %}
+
+    <div class="row">{{ form(searchForm, {'action': path('fatture'), }) }}
+
+    {% if app.request.query.get('fatture_search_form') %}
+        {% if app.request.query.get('fatture_search_form')['anno'] %}
+            {% if app.request.query.get('fatture_search_form')['mese'] %}
+                {% set val_anno = app.request.query.get('fatture_search_form')['anno'] %}
+                {% set val_mese = app.request.query.get('fatture_search_form')['mese'] %}
+                <a class="btn btn-success m-2"
+                   href="{{ path('fatture_lista_pdf', {anno: val_anno, mese: val_mese}) }}"><i class="far fa-file-pdf"></i></a>
+            {% endif %}
+        {% endif %}
+    {% endif %}
+    </div>
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>Data</th>
+            <th>Numero</th>
+            <th>Cliente</th>
+            <th>Invio mail</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for ft in fatture %}
+            <tr>
+                <td scope="row"><a href="{{ path('fatture_view', {id: ft.id}) }}">{{ ft.id }}</a></td>
+                <td>{{ ft.dataFattura|date('j/m/Y') }}</td>
+                <td>{{ ft.numeroFattura }}</td>
+                <td>{{ ft.cliente.ragioneSociale }}</td>
+                <td>{% if ft.dataMail %} {{ ft.dataMail|date('j/m/Y H:i') }} {% else %}
+                        - {% endif %}</td>
+                <td><a class="btn btn-success btn-sm" href="{{ path('fatture_pdf', {id: ft.id}) }}"><i class="far fa-file-pdf"></i></a>
+                    <a class="btn btn-primary btn-sm btn-mail {% if not ft.cliente.email %} btn-warning disabled{% endif %}"
+                       href="{{ path('fatture_mail', {id: ft.id}) }}" data-toggle="tooltip"
+                       title="{{ ft.cliente.email }}"><i class="fas fa-envelope"></i></a>
+                    {% if date(ft.dataFattura) > date('-131days') %}
+                        <a href="{{ path('fatture_delete', {id: ft.id}) }}" class="btn btn-danger btn-sm btn-delete">
+                            <i class="fas fa-trash-alt"></i></a>
+                    {% endif %}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {% if fatture.haveToPaginate is defined and fatture.haveToPaginate %}
+        <div class="navigation">
+            {{ pagerfanta(fatture, 'twitter_bootstrap4_translated', {routeName: 'fatture_index_paginated', routeParams: app.request.query.all}) }}
+        </div>
+    {% endif %}
+
+    <div id="dialog-confirm" title="Eliminare Fattura?">
+        <p class="text-danger">
+            <span style="font-size: 2em; float: left; margin: 12px 12px 20px 0;"><i class="fas fa-exclamation-triangle" style=""></i></span>
+            Il numero dovr&aacute essere usato da un altra fattura.<br>
+            Non si possono lasciare numeri liberi.<br>
+            Procedo?
+        </p>
+    </div>
+
+    <div id="dialog-mail" title="Invio mail dettaglio">
+        <p class="text-danger">
+            <span style="font-size: 2em; float: left; margin: 12px 12px 20px 0;"><i class="fas fa-exclamation-triangle" style=""></i></span>
+            Sicuro di voler inviare la mail cliente?
+        </p>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('js/ftindex') }}
+{% endblock %}

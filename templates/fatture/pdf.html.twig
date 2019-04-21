@@ -1,0 +1,156 @@
+<style type="text/css">
+    body {
+        font-family: sans-serif;
+        font-size: 9pt;
+    }
+
+    address {
+        margin-left: 55%;
+        border: solid 1px;
+        border-color: gray;
+        border-radius: 4mm;
+        padding-left: 4mm;
+    }
+
+    .righeFattura, .totali {
+        border-collapse: collapse;
+        width: 100%;
+        margin-top: 5mm;
+        border-bottom-style: solid;
+        border-bottom: 1px;
+    }
+
+    .righeFattura td{
+        border-bottom: 1px solid gray;
+    }
+
+    .righeFattura tr:nth-child(even) {
+        background-color: lightblue;
+    }
+
+    th {
+        text-align: left;
+        border-bottom: 1px solid black;
+    }
+
+    th.prezzo, td.prezzo {
+        text-align: right;
+    }
+</style>
+
+<body>
+<table style="width: 100%; border-bottom: 1px; border-bottom-style: solid">
+    <tr>
+        <td>
+            <img src="{{ asset('build/images/logo_ntt.svg') }}" alt="logo natalini" height="20mm"/>
+            <h3>di Andrea Natalini & C. S.A.S</h3>
+        </td>
+        <td style="padding-left: 10mm">
+            <p>Via dell'Aviere, 58</p>
+            <p>37046 Minerbe (VR)</p>
+            <p>Cod.fiscale 03744170238</p>
+            <p>P.IVA 03744170238</p>
+        </td>
+        <td style="text-align: right">
+            <p>N.iscr.albo TVR2809170Y</p>
+            <p>cell. 333 4813101</p>
+            <p>fax 0442 793113</p>
+            <p>info@natalinitrasporti.it</p>
+        </td>
+    </tr>
+</table>
+
+<table>
+    <tbody>
+    <tr>
+        <td>{% if ft.totale>0 %}Dettaglio rif. {% else %}Nota di credito n. {% endif %}</td>
+        <td><strong>{{ ft.numeroFattura }}</strong></td>
+    </tr>
+    <tr>
+        <td>Data</td>
+        <td>..{{ ft.dataFattura|date('/m/Y') }}</td>
+    </tr>
+    <tr>
+        <td>Pagamento</td>
+        <td>{{ ft.cliente.pagamento.pagamento }}</td>
+    </tr>
+    <tr>
+        <td>P.IVA cliente</td>
+        <td>{{ ft.cliente.pIva}}</td>
+    </tr>
+    </tbody>
+</table>
+
+<address>
+    <p>
+        Spett.le <br> <strong>{{ ft.cliente.ragioneSociale }}</strong><br>
+        {{ ft.cliente.indirizzo }}				<br>
+        {{ ft.cliente.CAP }}
+        {{ ft.cliente.paese }} ({{ ft.cliente.provincia.sigla }})
+    </p>
+</address>
+
+<table class="righeFattura">
+    <thead>
+        <tr>
+            <th>Data</th>
+            <th>Numero</th>
+            <th>Descrizione</th>
+            <th>Kg</th>
+            <th>Colli</th>
+            <th class="prezzo">Prezzo</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% if ft.cliente.notaFattura %}
+        <td class="notaFattura" colspan="3"> {{ ft.cliente.notaFattura }} </td>
+    {% endif %}
+
+    {% set totale = 0 %}
+
+    {% for ddt in ft.ddts %}
+        <tr>
+            <td>{{ ddt.dataDdt|date('j/m/Y') }}</td>
+            <td>{{ ddt.numeroDdt }}</td>
+            <td>{{ ddt.descrizione }}</td>
+            <td>{{ ddt.peso }}</td>
+            <td>{{ ddt.quantita }}</td>
+            <td class="prezzo">{{ ddt.prezzo }}</td>
+            {% set totale = totale + ddt.prezzo %}
+        </tr>
+    {% endfor %}
+
+    </tbody>
+</table>
+
+<table class="totali">
+    <tr>
+        <td>
+            {% if ft.iva == 0 %}
+                Importo non imponibile IVA ai sensi dell'articolo xxx/xx
+            {% else %}
+                IVA ad esigibilita' immediata
+            {% endif %}
+        </td>
+        <td>Importo</td>
+        <td class="prezzo">{{ ft.totale|number_format(2, '.', ',') }}</td>
+    </tr>
+    {% if ft.spesaIncasso > 0 %}
+        <tr>
+            <td>
+            <td>Spesa Incasso</td>
+            <td class="prezzo">{{ ft.spesaIncasso|number_format(2, '.', ',') }}</td>
+        </tr>
+    {% endif %}
+    <tr>
+        <td></td>
+        <td>Iva {{ ft.iva }}%</td>
+        <td class="prezzo">{{ ((ft.totale+ft.spesaIncasso)*ft.iva/100.00)|number_format(2, '.', ',') }}</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>Totale</td>
+        <td class="prezzo"><strong>{{ ((ft.totale+ft.spesaIncasso)*(1+ft.iva/100.00))|number_format(2, '.', ',')  }}</strong></td>
+    </tr>
+</table>
+</body>

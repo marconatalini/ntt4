@@ -1,12 +1,79 @@
 <!DOCTYPE html>
-<html>
+<html lang="it">
     <head>
         <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        {% block stylesheets %}{{ encore_entry_link_tags('css/app') }}{% endblock %}
+
         <title>{% block title %}Welcome!{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
     </head>
     <body>
+        {% block nav %}
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+            <a class="navbar-brand" href="{{ path('home') }}">Natalini Trasporti</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-md-center" id="navbarCollapse">
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="menuClienti" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Clienti</a>
+                        <div class="dropdown-menu" aria-labelledby="menuClienti">
+                            <a class="dropdown-item" href="{{ path('clienti') }}">Lista</a>
+                            <a class="dropdown-item" href="{{ path('clienti_add') }}">Aggiungi</a>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="menuDdt" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Bolle</a>
+                        <div class="dropdown-menu" aria-labelledby="menuDdt">
+                            <a class="dropdown-item" href="{{ path('ddts') }}">Lista</a>
+                            <a class="dropdown-item" href="{{ path('ddts_add') }}">Aggiungi</a>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="menuFatture" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Fatture</a>
+                        <div class="dropdown-menu" aria-labelledby="menuFatture">
+                            <a class="dropdown-item" href="{{ path('fatture') }}">Lista</a>
+                            <a class="dropdown-item" href="{{ path('fatture_add') }}">Aggiungi</a>
+                            <a class="dropdown-item" href="{{ path('fatture_report') }}">Report</a>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="menuProspetti" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Prospetti</a>
+                        <div class="dropdown-menu" aria-labelledby="menuProspetti">
+                            <a class="dropdown-item" href="{{ path('prospetti') }}">Lista</a>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="menuAutomezzi" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Automezzi</a>
+                        <div class="dropdown-menu" aria-labelledby="menuAutomezzi">
+                            <a class="dropdown-item" href="{{ path('automezzi') }}">Lista</a>
+                            <a class="dropdown-item" href="{{ path('automezzi_add') }}">Aggiungi</a>
+                            <a class="dropdown-item" href="{{ path('automezzi_report') }}">Report</a>
+                        </div>
+                    </li>
+
+                </ul>
+            </div>
+        </nav>
+        {% endblock %}
+        {% block flashMessage %}
+            {# ...or you can read and display every flash message available #}
+            {% for label, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ label }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endfor %}
+        {% endblock %}
+        {% block filtri %}{% endblock %}
         {% block body %}{% endblock %}
-        {% block javascripts %}{% endblock %}
+        {% block javascripts %}{{ encore_entry_script_tags('js/app') }}{% endblock %}
     </body>
 </html>

@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Automezzi{% endblock %}
+
+{% block body %}
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>Targa</th>
+            <th>Modello</th>
+            <th>Bollo</th>
+            <th>Revisione</th>
+            <th>Dismesso</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for automezzo in automezzi %}
+            <tr>
+                <td scope=row>{{ automezzo.id }}</td>
+                <td>{{ automezzo.targa }}</td>
+                <td>{{ automezzo.modello}}</td>
+                <td>{{ automezzo.dataBollo|date('j/m/Y') }}</td>
+                <td>{{ automezzo.dataRevisione|date('j/m/Y') }}</td>
+                <td>{% if automezzo.dismesso  %}SI{% endif %}</td>
+                <td>
+                    <a href="{{ path('automezzi_edit', {id: automezzo.id}) }}" class="btn btn-primary btn-sm">
+                        <i class="fas fa-edit"></i></a>
+                    <a href="{{ path('automezzi_delete', {id: automezzo.id}) }}" class="btn btn-danger btn-sm">
+                        <i class="fas fa-trash-alt"></i></a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <div id="dialog-confirm" title="Eliminare Automezzo?">
+        <p class="text-danger">
+            <span style="font-size: 2em; float: left; margin: 12px 12px 20px 0;"><i class="fas fa-exclamation-triangle" style=""></i></span>
+            L'eliminazione sarà possibile solo se non ci sono DDT inseriti<br>
+            Procedo?
+        </p>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('js/ftindex') }}
+{% endblock %}

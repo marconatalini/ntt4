@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% endblock %}
+{% block stylesheets %}{% endblock %}
+{% block nav %}{% endblock %}
+
+{% block body %}
+
+<p>
+Buongiorno, <br>
+in allegato inviamo il dettaglio dei servizi riferiti alla prossima fattura elettronica ({{ ft.numeroFattura }}).<br>
+L'allegato è un file in formato PDF. Potete trovare il programma per leggerlo sul sito <a href="https://get.adobe.com/it/reader">Adobe Acrobat Reader</a>
+</p>
+
+<p>
+    L'occasione è gradita per porgere i nostri più cordiali saluti.
+</p>
+
+<p>
+    In fede <br>
+    Natalini Trasporti
+</p>
+
+<p>
+    Questa mail è generata automaticamente dal sistema. Vi preghiamo di non rispondere a questo indirizzo ma di usare i soliti canali di comunicazione perchè questa casella non viene monitorata.
+</p>
+{% endblock %}
+
+{% block dump %}{% endblock %}
+{% block javascripts %}{% endblock %}

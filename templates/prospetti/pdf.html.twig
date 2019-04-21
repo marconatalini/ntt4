@@ -1,0 +1,67 @@
+<style type="text/css">
+    body {
+        font-family: sans-serif;
+        font-size: 9pt;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    td,th {
+        border-bottom: solid 1px gray;
+        text-align: left;
+    }
+</style>
+
+    <h1>Prospetto viaggi e destinazioni anno </h1>
+    {% set curmese = 0 %}
+    {% set index = 0 %}
+    {% set nomemese = ['gennaio','febbraio','marzo','aprile','maggio','giugno','luglio','agosto','settembre','ottobre','novembre','dicembre'] %}
+
+    {% for row in result %}
+        {% if row.mese != curmese %}
+            {% if curmese >0 %}
+                <tr>
+                    <th>Totale viaggi {{ index }}</th>
+                    {% set index = 0 %}
+                </tr>
+                </tbody>
+                </table>
+            {% endif %}
+            <h3>Mese di {{ nomemese[row.mese -1] |capitalize }} {{ anno }}</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Data DDT</th>
+                        <th>Numero</th>
+                        <th>Cliente</th>
+                        <th>Provincia</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ row.data_ddt|date('j/m/Y') }}</td>
+                        <td scope="row"><a href="{{ path('ddts_edit', {id: row.id})  }}">{{ row.numero_ddt }}</a></td>
+                        <td>{{ row.ragione_sociale }} </td>
+                        <td>{{ row.sigla }}</td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td>{{ row.data_ddt|date('j/m/Y') }}</td>
+                        <td scope="row"><a href="{{ path('ddts_edit', {id: row.id})  }}">{{ row.numero_ddt }}</a></td>
+                        <td>{{ row.ragione_sociale }} </td>
+                        <td>{{ row.sigla }}</td>
+                    </tr>
+                {% endif %}
+        {% set index = index + 1 %}
+        {% set curmese = row.mese %}
+    {% endfor %}
+    <tr>
+        <th>Totale viaggi {{ index }}</th>
+        {% set index = 0 %}
+    </tr>
+    </tbody>
+</table>
+

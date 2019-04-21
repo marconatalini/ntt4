@@ -1,0 +1,79 @@
+{% extends 'base.html.twig' %}
+
+
+{% block title %}Ddts{% endblock %}
+
+{% block body %}
+    {% if searchForm is defined %}
+        {% form_theme searchForm with [
+        'bootstrap_4_layout.html.twig',
+        'form/inlineSearchForm.html.twig',]
+        %}
+        {{ form(searchForm, {'action': path('ddts'), }) }}
+    {% endif %}
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>Data DDT</th>
+            <th>Numero</th>
+            <th>Cliente</th>
+            <th>Descrizione</th>
+            <th>Kg</th>
+            <th>Colli</th>
+            <th>Prezzo</th>
+            <th>Fattura</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for ddt in ddts %}
+            <tr>
+                <th scope="row"><a href="#">{{ ddt.id }}</a></th>
+                <td>{{ ddt.dataDdt|date('j/m/Y') }}</td>
+                <td>{{ ddt.numeroDdt }}</td>
+                <td>{{ ddt.cliente.ragioneSociale }} </td>
+                <td>{{ ddt.descrizione }}</td>
+                <td>{{ ddt.peso }}</td>
+                <td>{{ ddt.quantita }}</td>
+                <td><strong>{{ ddt.prezzo }}</strong></td>
+                {%  if ddt.fattura %}
+                    <td><a href="{{ path('fatture_view', {id: ddt.fattura.id}) }}">{{ ddt.fattura.numeroFattura }}</a> del {{ ddt.fattura.dataFattura|date('j/m/Y') }}</td>
+                {% else %}
+                    <td>-</td>
+                {% endif %}
+                <td>
+                    <a href="{{ path('ddts_edit', {id: ddt.id}) }}" class="btn btn-primary btn-sm">
+                        <i class="fas fa-edit"></i></a>
+                    {% if not ddt.fattura %}
+                    <a href="{{ path('ddts_delete', {id: ddt.id}) }}" class="btn btn-danger btn-sm btn-delete">
+                        <i class="fas fa-trash-alt"></i></a>
+                    {% endif %}
+
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {% if ddts.haveToPaginate is defined and ddts.haveToPaginate %}
+        <div class="navigation">
+            {{ pagerfanta(ddts, 'twitter_bootstrap4_translated', {routeName: 'ddts_index_paginated', routeParams: app.request.query.all}) }}
+        </div>
+    {% endif %}
+
+    <div id="dialog-confirm" title="Eliminare DDT?">
+        <p class="text-danger">
+            <span style="font-size: 2em; float: left; margin: 12px 12px 20px 0;"><i class="fas fa-exclamation-triangle" style=""></i></span>
+            Sto per cancellare definitivamente questo DDT.<br>
+            Procedo?
+        </p>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('js/ftindex') }}
+{% endblock %}

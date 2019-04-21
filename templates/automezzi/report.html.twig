@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+{% form_theme searchForm with [
+    'bootstrap_4_layout.html.twig',
+    'form/inlineSearchForm.html.twig',]
+%}
+{% block title %}Report{% endblock %}
+
+{% block body %}
+
+    {{ form(searchForm, {'action': path('automezzi_report'), }) }}
+
+    <div class="row">
+    <table class="table table-striped col-lg-7">
+        <thead>
+        <tr>
+            <th>Targa</th>
+            <th>Modello</th>
+            <th>Viaggi</th>
+            <th>Totale</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% set totViaggi = 0  %}
+        {% set totFatturato = 0  %}
+        {% for row in result %}
+            <tr>
+                <td itemid="targa">{{ row.targa }}</td>
+                <td itemid="modello">{{ row.modello}}</td>
+                <td itemid="viaggi">{{ row.numeroViaggi}}</td> {% set totViaggi = totViaggi + row.numeroViaggi %}
+                <td itemid="totale">{{ row.totale}}</td> {% set totFatturato = totFatturato + row.totale %}
+                <td><a class="btn btn-default"
+                       href="{{ path('ddts', {automezzo: row.id, anno: anno, mese: mese}) }}"
+                        data-toggle="tooltip" title="Clicca per vedere i DDT compresi"><i class="fas fa-search"></i>
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+        <tfoot>
+        <tr>
+            <td scope="row">Totali</td>
+            <td></td>
+            <td><strong>{{ totViaggi }}</strong></td>
+            <td><strong>{{ totFatturato }}</strong></td>
+        </tr>
+        </tfoot>
+    </table>
+    <canvas id="myChart" class="col-lg-5"></canvas>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('js/report') }}
+{% endblock %}

@@ -1,0 +1,13 @@
+{% set totale = 0 %}
+
+{% for ddt in ft.ddts %}
+    <tr>
+        <td>{{ ddt.dataDdt|date('j/m/Y') }}</td>
+        <td><a href="/ddts/edit/{{ ddt.id }}">{{ ddt.numeroDdt }}</a></td>
+        <td>{{ ddt.descrizione }}</td>
+        <td>{{ ddt.peso }}</td>
+        <td>{{ ddt.quantita }}</td>
+        <td class="text-right">{{ ddt.prezzo }}</td>
+        {% set totale = totale + ddt.prezzo %}
+    </tr>
+{% endfor %}

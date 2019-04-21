@@ -1,0 +1,139 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('css/ftview') }}
+{% endblock %}
+
+{% block body %}
+    <div class="page-header">
+        {#<img src="{{ asset('build/images/logo_ntt.svg') }}" alt="logo natalini" height="120px"/>#}
+        <h3>di Andrea Natalini & C. S.A.S</h3>
+    </div>
+
+    <div class="row">
+        <div class="dati-sx col-sm-6">
+            <p>Via dell'Aviere, 58</p>
+            <p>37046 Minerbe (VR)</p>
+            <p>Cod.fiscale 03744170238</p>
+            <p>P.IVA 03744170238</p>
+        </div>
+        <div class="dati-dx col-sm-6">
+            <p class="text-right">N.iscr.albo TVR2809170Y</p>
+            <p class="text-right">
+                <i class="fas fa-phone"></i>
+                333 4813101
+            </p>
+            <p class="text-right">
+                <i class="fas fa-print"></i>
+                0442 793113
+            </p>
+            <p class="text-right">
+                <i class="fas fa-envelope"></i>
+                natalini.trasporti@libero.it
+            </p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-7">
+            <table class="table table-bordered dati-fattura">
+                <tbody>
+                <tr>
+                    <td>{% if ft.totale>0 %}Dettaglio fattura n. {% else %}Nota di credito n. {% endif %}</td>
+                    <td><strong>{{ ft.numeroFattura }}</strong></td>
+                </tr>
+                <tr>
+                    <td>Data</td>
+                    <td>{{ ft.dataFattura|date('j/m/Y') }}</td>
+                </tr>
+                <tr>
+                    <td>Pagamento</td>
+                    <td>{{ ft.cliente.pagamento.pagamento }}</td>
+                </tr>
+                <tr>
+                    <td>P.IVA cliente</td>
+                    <td>{{ ft.cliente.pIva}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-sm-5">
+            <address id="destinatario">
+                <p>
+                    Spett.le <br> <strong>{{ ft.cliente.ragioneSociale }}</strong><br>
+                    {{ ft.cliente.indirizzo }}				<br>
+                    {{ ft.cliente.CAP }}
+                    {{ ft.cliente.paese }} ({{ ft.cliente.provincia.sigla }})
+                </p>
+            </address>
+        </div>
+    </div>
+
+
+    <table class="table table-striped">
+        <thead>
+        <th class="col-sm-2">Data</th>
+        <th class="col-sm-1">Numero</th>
+        <th class="col-sm-6">Descrizione</th>
+        <th class="col-sm-1">Kg</th>
+        <th class="col-sm-1">Colli</th>
+        <th class="col-sm-1 text-right">Prezzo</th>
+        </thead>
+        <tbody>
+        {% if ft.cliente.notaFattura %}
+            <td class="notaFattura" colspan="3"> {{ ft.cliente.notaFattura }} </td>
+        {% endif %}
+
+        {{ include('ddts/_dtt_fattura.html.twig') }}
+
+        </tbody>
+    </table>
+
+
+    <table class="table fattura-totale">
+        <tr>
+            <td class="col-sm-8">
+                {% if ft.iva == 0 %}
+                    Importo non imponibile IVA ai sensi dell'articolo xxx/xx
+                {% else %}
+                    IVA ad esigibilita' immediata
+                {% endif %}
+            </td>
+            <td class="col-sm-2">Importo
+                {% if ft.spesaIncasso == 0 and ft.totale < 150 %}
+                    <a class="btn btn-success btn-sm" href="{{ path('fatture_view', {id: ft.id, addSpese : 1}) }}">
+                        <i class="fas fa-plus"></i> spese
+                    </a>
+                {% endif %}
+            </td>
+            <td class="col-sm-2 text-right">{{ ft.totale|number_format(2, '.', ',') }}</td>
+        </tr>
+        {% if ft.spesaIncasso > 0 %}
+            <tr>
+                <td class="col-sm-8">
+                <td class="col-sm-2">Spesa Incasso
+                    <a class="btn btn-danger btn-sm" href="{{ path('fatture_view', {id: ft.id, addSpese : 0}) }}">
+                        <i class="fas fa-minus"></i> spese
+                    </a>
+                </td>
+                <td class="col-sm-2 text-right">{{ ft.spesaIncasso|number_format(2, '.', ',') }}</td>
+            </tr>
+        {% endif %}
+        <tr>
+            <td></td>
+            <td>Iva {{ ft.iva }}%
+            </td>
+            <td class="col-sm-2 text-right">{{ ((ft.totale+ft.spesaIncasso)*ft.iva/100.00)|number_format(2, '.', ',') }}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>Totale</td>
+            <td class="col-sm-2 text-right">{{ ((ft.totale+ft.spesaIncasso)*(1+ft.iva/100.00))|number_format(2, '.', ',')  }}</td>
+        </tr>
+    </table>
+
+    <button onclick="topFunction()" id="btnToTop" title="Go to top">Torna SU</button>
+
+{% endblock %}

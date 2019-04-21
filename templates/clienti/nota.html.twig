@@ -1,0 +1,20 @@
+<style type="text/css">
+    .nota-cliente{
+        width: 100%;
+        margin: 0 auto;
+        text-align: start;
+        text-align: left;
+    }
+</style>
+
+{% if cliente.note %}
+    <div class="nota-cliente">
+        <p>{{ cliente.ragioneSociale }}:</p>
+        <p>{{ cliente.note }}</p>
+    </div>
+{% else %}
+    <div class="nota-cliente">
+        <p>{{ cliente.ragioneSociale }}:</p>
+        <p>Nessuna NOTA</p>
+    </div>
+{% endif %}
