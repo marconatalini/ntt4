@@ -8,7 +8,6 @@ use Doctrine\ORM\Query;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
 use Symfony\Bridge\Doctrine\RegistryInterface;
-use DoctrineExtensions\Query\Mysql;
 
 /**
  * @method Ddts|null find($id, $lockMode = null, $lockVersion = null)
@@ -65,6 +64,13 @@ class DdtsRepository extends ServiceEntityRepository
                 ->setParameter('numero', $search['numero'])
             ;
         }
+
+        if ($search['descrizione'] !== "" ){
+            $qb->andWhere('d.descrizione like :descrizione')
+                ->setParameter('descrizione', "%".$search['descrizione']."%")
+            ;
+        }
+
 
         if ($search['cliente'] !== ""){
             $qb->andWhere('d.cliente = :cliente')
