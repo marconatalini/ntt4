@@ -10,6 +10,7 @@ use App\Repository\FattureRepository;
 use Doctrine\DBAL\Driver\Connection;
 use Doctrine\DBAL\FetchMode;
 use Mpdf\Mpdf;
+use Mpdf\Output\Destination;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -73,6 +74,7 @@ class FattureController extends AbstractController
     public function pdfAction($id, $mode = null){
 
         $em = $this->getDoctrine()->getManager();
+        /** @var Fatture $ft */
         $ft = $em->getRepository(Fatture::class)->find($id);
 
         $html = $this->renderView ( 'fatture/pdf.html.twig',[
@@ -86,9 +88,9 @@ class FattureController extends AbstractController
 
         // Output a PDF file directly to the browser
         if (!$mode) {
-            $mpdf->Output();
+            $mpdf->Output($ft->pdfFileName(), Destination::INLINE);
         } else {
-            $pdffile = $mpdf->Output('test.pdf', \Mpdf\Output\Destination::STRING_RETURN);
+            $pdffile = $mpdf->Output($ft->pdfFileName(), Destination::STRING_RETURN);
             return new Response($pdffile, 200, [
                 'Content-Type' => 'application/pdf',
                 'Content-Disposition' => sprintf ( 'attachment; filename="prova.pdf"' )

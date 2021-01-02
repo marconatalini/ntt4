@@ -259,4 +259,8 @@ class Fatture
         return $this;
     }
 
+    public function pdfFileName()
+    {
+        return sprintf("%s FT %s %s", date("Ymd", $this->dataFattura->getTimestamp()), $this->numeroFattura, str_replace('.','_',$this->cliente->getRagioneSociale()));
+    }
 }
